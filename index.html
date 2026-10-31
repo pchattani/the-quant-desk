@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en" data-macro-site="desk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Quant Desk · Systematic macro strategies</title>
+<meta name="description" content="The Quant Desk: every systematic macro strategy on one research platform, categorised by style — trend, carry, relative value, multi-strategy, risk premia, alternative factors and digital assets — on a hundred futures markets since 1990, against the SG CTA index. Tear sheets, calendars, the market board, risk and gearing, methodology.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600;700&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/desk.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.35.3/plotly.min.js"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <h1>The Quant <b>Desk</b></h1>
+        <p class="sub">Systematic macro · <span id="brand-n">—</span> strategies · 7 styles · 112 futures markets · since 1990</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="asof" id="freshness"></div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="tabs-inner" role="tablist">
+    <button class="tab" role="tab" data-tab="monitor" aria-selected="true" aria-controls="tab-monitor">Monitor</button>
+    <button class="tab" role="tab" data-tab="styles" aria-selected="false" aria-controls="tab-styles">Styles</button>
+    <button class="tab" role="tab" data-tab="strategy" aria-selected="false" aria-controls="tab-strategy">Strategy</button>
+    <button class="tab" role="tab" data-tab="benchmark" aria-selected="false" aria-controls="tab-benchmark">Benchmark</button>
+    <button class="tab" role="tab" data-tab="markets" aria-selected="false" aria-controls="tab-markets">Markets</button>
+    <button class="tab" role="tab" data-tab="risk" aria-selected="false" aria-controls="tab-risk">Risk</button>
+    <button class="tab" role="tab" data-tab="methodology" aria-selected="false" aria-controls="tab-methodology">Methodology</button>
+  </div>
+</nav>
+
+<div class="ticker" aria-label="This year by style"><div class="ticker-in" id="tape"></div></div>
+
+<main id="main">
+<noscript><p class="noscript">The Quant Desk needs JavaScript to draw its charts.</p></noscript>
+
+<!-- ── Monitor ─────────────────────────────────────────────────────────── -->
+<section id="tab-monitor" class="panel" role="tabpanel">
+  <div class="sh lg">
+    <div class="sh-main">
+      <span class="kicker">Systematic macro</span>
+      <h2 class="sh-title">Every strategy, by style.</h2>
+      <p class="sh-sub" id="hero-sub"></p>
+    </div>
+    <div class="sh-side" id="hero-side"></div>
+  </div>
+  <section class="kpis" id="kpis" aria-label="Headline figures"></section>
+
+  <div class="sh week-head">
+    <div class="sh-main"><span class="kicker">The year so far</span><h2 class="sh-title">The year in five lines</h2><p class="sh-sub" id="year-lede"></p></div>
+  </div>
+  <section class="week" id="year-lines" aria-label="The year in five facts"></section>
+
+  <div class="grid">
+    <figure class="card" data-chart="style_board">
+      <figcaption><h3>Style board <span class="ctx">equal-weight composites of each style's strategies, scaled to 10% vol · select a row to open the style</span></h3>
+        <div class="card-tools"><a class="glossary-link" href="#tab=methodology&g=g-composite">ⓘ definitions</a></div></figcaption>
+      <div class="board" id="style-board"></div>
+    </figure>
+
+    <figure class="card twothirds" data-chart="style_nav">
+      <figcaption><h3>Growth of 100 by style <span class="ctx">log scale · composites at 10% vol · benchmark proxy in grey from 2019</span></h3>
+        <div class="card-tools"><div class="seg" role="radiogroup" aria-label="Window" data-filter="monitor.window"></div><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-nav"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="style_corr">
+      <figcaption><h3>How the styles relate <span class="ctx">correlation of monthly returns since 1990</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-corr"></div><div class="tablewrap" hidden></div>
+    </figure>
+
+    <figure class="card" data-chart="strategy_board">
+      <figcaption><h3>Strategy board <span class="ctx" id="sboard-ctx">every strategy · Sharpe by window · select a row to open it</span></h3>
+        <div class="card-tools"><div class="seg" role="radiogroup" aria-label="Style" data-filter="monitor.style"></div><a class="glossary-link" href="#tab=methodology&g=g-sharpe">ⓘ</a></div></figcaption>
+      <div class="tablewrap" id="strategy-board" style="max-height:640px"></div>
+    </figure>
+
+    <figure class="card" data-chart="multiples">
+      <figcaption><h3>All strategies <span class="ctx">growth of 100, log, since 1990 · coloured by style · select to open</span></h3></figcaption>
+      <div class="multiples" id="multiples"></div>
+    </figure>
+
+    <figure class="card half" data-chart="ytd_bars">
+      <figcaption><h3 id="ytd-title">This year by strategy <span class="ctx">% of capital at the 10% target</span></h3>
+        <div class="card-tools"><div class="seg" role="radiogroup" aria-label="Period" data-filter="monitor.period"></div><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table"></button></div></figcaption>
+      <div class="plot" id="chart-ytd-bars"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="style_years">
+      <figcaption><h3>Styles by year <span class="ctx">since the benchmark proxy's inception · DBMF as traded in grey</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-years"></div><div class="tablewrap" hidden></div>
+    </figure>
+  </div>
+</section>
+
+<!-- ── Styles ──────────────────────────────────────────────────────────── -->
+<section id="tab-styles" class="panel" role="tabpanel" hidden>
+  <div class="sh">
+    <div class="sh-main"><span class="kicker">Styles</span><h2 class="sh-title" id="style-title">Trend following</h2><p class="sh-sub" id="style-blurb"></p></div>
+  </div>
+  <div class="filters">
+    <span class="filter-label">Style</span>
+    <div class="seg" role="radiogroup" aria-label="Style" data-filter="styles.key"></div>
+    <span class="note" style="margin:0" id="style-members-note"></span>
+  </div>
+  <div class="tiles" id="style-tiles"></div>
+  <div class="grid">
+    <figure class="card twothirds" data-chart="style_detail_nav">
+      <figcaption><h3>Composite <span class="ctx">growth of 100 above, drawdown beneath · equal weight of the members at 10% vol</span></h3>
+        <div class="card-tools"><div class="seg" role="radiogroup" aria-label="Window" data-filter="styles.window"></div><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-detail-nav"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="style_members_table">
+      <figcaption><h3>Members <span class="ctx">select to open</span></h3></figcaption>
+      <div class="tablewrap" id="style-members" style="max-height:420px"></div>
+    </figure>
+    <figure class="card half" data-chart="style_members_nav">
+      <figcaption><h3>Members, growth of 100 <span class="ctx">log · monthly · hover or click a line to bring one forward</span></h3>
+        <div class="card-tools"><div class="seg" role="radiogroup" aria-label="Window" data-filter="styles.window"></div><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-members-nav"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="style_rolling">
+      <figcaption><h3>Rolling Sharpe <span class="ctx">one year and three years · composite</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-rolling"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card twothirds" data-chart="style_calendar">
+      <figcaption><h3>Calendar <span class="ctx">monthly returns of the composite, % · the year's total at right</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-calendar"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="style_member_corr">
+      <figcaption><h3>Within the style <span class="ctx">correlation of monthly returns</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-member-corr"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="style_years_bars">
+      <figcaption><h3>By year <span class="ctx">composite against DBMF as traded, from 2019</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-style-years-bars"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="style_dd">
+      <figcaption><h3>Worst drawdowns <span class="ctx">composite</span></h3></figcaption>
+      <div class="tablewrap" id="style-dd"></div>
+    </figure>
+  </div>
+</section>
+
+<!-- ── Strategy ────────────────────────────────────────────────────────── -->
+<section id="tab-strategy" class="panel" role="tabpanel" hidden>
+  <div class="sel-row">
+    <span class="filter-label">Strategy</span>
+    <select class="ctl" id="strategy-select" aria-label="Strategy"></select>
+    <span class="tag style" id="strategy-style-tag"></span>
+    <span class="note" style="margin:0" id="strategy-kind"></span>
+  </div>
+  <div class="cb-head"><h2 id="strategy-name"></h2><span class="meta" id="strategy-meta"></span></div>
+  <div class="tiles" id="strategy-tiles"></div>
+  <div class="grid">
+    <figure class="card" data-chart="s_desc">
+      <div class="desc-card"><p class="sh-sub" style="margin:0" id="strategy-desc"></p><div class="rule" id="strategy-rule"></div></div>
+    </figure>
+    <figure class="card twothirds" data-chart="s_nav">
+      <figcaption><h3>Growth of 100 and drawdown <span class="ctx">weekly · net of 2 bps · log scale</span></h3>
+        <div class="card-tools"><div class="seg" role="radiogroup" aria-label="Window" data-filter="strategy.window"></div><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-nav"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="s_tear">
+      <figcaption><h3>Tear sheet <span class="ctx">by window</span></h3></figcaption>
+      <div class="tablewrap" id="s-tear" style="max-height:520px"></div>
+    </figure>
+    <figure class="card twothirds" data-chart="s_calendar">
+      <figcaption><h3>Calendar <span class="ctx">monthly returns, % · the year's total at right</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-calendar"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="s_annual">
+      <figcaption><h3>By year <span class="ctx">return, %</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-annual"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="s_rolling">
+      <figcaption><h3>Rolling Sharpe <span class="ctx">one year and three years</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-rolling"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="s_bench">
+      <figcaption><h3>Against the benchmark proxy <span class="ctx">52-week rolling correlation of weekly returns to DBMF</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-bench"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="s_class_year">
+      <figcaption><h3>P&amp;L by asset class and year <span class="ctx">% of capital</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-class-year"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="s_ytd_class">
+      <figcaption><h3 id="s-ytd-title">This year by class and sector <span class="ctx">% of capital</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-ytd-class"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="s_exposure">
+      <figcaption><h3>Exposure by class <span class="ctx">× capital · quarterly average · gross stacked above, net beneath</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-exposure"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="s_activity">
+      <figcaption><h3>Turnover and cost <span class="ctx">gross notional traded ÷ capital per year · cost in bps of capital</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-s-activity"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card twothirds" data-chart="s_positions">
+      <figcaption><h3>The book today <span class="ctx" id="s-pos-ctx">weight in % of capital · vol · the signal · risk = |weight| × vol · this year's P&amp;L from the market</span></h3></figcaption>
+      <div class="tablewrap" id="s-positions" style="max-height:520px"></div>
+    </figure>
+    <figure class="card third" data-chart="s_dd">
+      <figcaption><h3>Worst drawdowns</h3></figcaption>
+      <div class="tablewrap" id="s-dd"></div>
+      <figcaption style="margin-top:14px"><h3>Monthly returns <span class="ctx">distribution, %</span></h3></figcaption>
+      <div class="plot" id="chart-s-dist"></div>
+    </figure>
+    <figure class="card" data-chart="s_config">
+      <figcaption><h3>Configuration, verbatim <span class="ctx">the YAML the platform ran</span></h3></figcaption>
+      <pre class="cfg" id="s-config"></pre>
+    </figure>
+  </div>
+</section>
+
+<!-- ── Benchmark ───────────────────────────────────────────────────────── -->
+<section id="tab-benchmark" class="panel" role="tabpanel" hidden>
+  <div class="sh">
+    <div class="sh-main"><span class="kicker">Benchmark</span><h2 class="sh-title">Against the SG CTA index</h2><p class="sh-sub">The index is licensed, so the public proxy is DBMF, an ETF whose objective is to replicate it before fees. The flagship trend book was calibrated to it once and frozen; every other strategy is measured against it here.</p></div>
+  </div>
+  <div class="tiles" id="bench-tiles"></div>
+  <div class="grid">
+    <figure class="card twothirds" data-chart="b_nav">
+      <figcaption><h3>Index-matched trend against DBMF <span class="ctx">growth of 100 since the ETF's inception · DBMF as traded and scaled to 10% vol</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-b-nav"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="b_corr">
+      <figcaption><h3>Rolling correlation <span class="ctx">weekly returns · 26 and 52 weeks</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-b-corr"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="b_year">
+      <figcaption><h3>By calendar year <span class="ctx">%</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-b-year"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="b_month">
+      <figcaption><h3>This year, month by month <span class="ctx">%</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-b-month"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card" data-chart="b_ladder">
+      <figcaption><h3>Correlation ladder <span class="ctx">weekly correlation of every strategy to DBMF over the ETF's life · coloured by style</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-b-ladder"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card" data-chart="b_table">
+      <figcaption><h3>Over the ETF's life <span class="ctx">every strategy on the common window: Sharpe, return, correlation and beta to DBMF</span></h3></figcaption>
+      <div class="tablewrap" id="b-table" style="max-height:600px"></div>
+    </figure>
+    <div class="explain" id="b-note"></div>
+  </div>
+</section>
+
+<!-- ── Markets ─────────────────────────────────────────────────────────── -->
+<section id="tab-markets" class="panel" role="tabpanel" hidden>
+  <div class="sh">
+    <div class="sh-main"><span class="kicker">Markets</span><h2 class="sh-title">What every style says today</h2><p class="sh-sub" id="markets-sub">Every market in the universe at the last bar: the trend filter's score and position, the carry on the curve, and each rule's forecast on Carver's scale (average absolute 10, capped at ±20, positive for long).</p></div>
+  </div>
+  <div class="filters">
+    <span class="filter-label">Class</span>
+    <div class="seg" role="radiogroup" aria-label="Asset class" data-filter="markets.cls"></div>
+    <span class="spacer"></span>
+    <span class="legend-note" id="markets-count"></span>
+  </div>
+  <div class="grid">
+    <figure class="card" data-chart="board">
+      <figcaption><h3>Market board <span class="ctx">sort any column · trend score on ±2 · forecasts on ±20 · carry in % of price a year</span></h3>
+        <div class="card-tools"><a class="glossary-link" href="#tab=methodology&g=g-forecast">ⓘ definitions</a></div></figcaption>
+      <div class="tablewrap" id="market-board" style="max-height:720px"></div>
+    </figure>
+    <figure class="card half" data-chart="m_universe">
+      <figcaption><h3>The combined forecast across the universe <span class="ctx" id="m-universe-ctx">every rule at the book's weights</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-m-universe"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="m_trend_universe">
+      <figcaption><h3>The trend filter across the universe <span class="ctx">score on ±2 · the flagship's view</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-m-trend-universe"></div><div class="tablewrap" hidden></div>
+    </figure>
+  </div>
+
+  <div class="sh" style="margin-top:28px">
+    <div class="sh-main"><span class="kicker">Anatomy</span><h2 class="sh-title">One market, end to end</h2><p class="sh-sub">How the trend book turns a price into a position, and what fifteen rules say about the same market over the last three years.</p></div>
+  </div>
+  <div class="steps" id="steps"></div>
+  <div class="sel-row" style="margin-top:14px">
+    <span class="filter-label">Market</span>
+    <select class="ctl" id="market-select" aria-label="Market"></select>
+    <span class="note" style="margin:0" id="market-desc"></span>
+  </div>
+  <div class="grid">
+    <figure class="card half" data-chart="m_anatomy">
+      <figcaption><h3>The trend book on this market <span class="ctx">price rebased · vol · filter score · position · cumulative P&amp;L</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-m-anatomy"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="m_rules">
+      <figcaption><h3>Fifteen forecasts on this market <span class="ctx">six shown; the legend toggles the rest</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-m-rules"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="m_rules_today">
+      <figcaption><h3>Where they stand today</h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-m-rules-today"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="m_impulse">
+      <figcaption><h3>The trend filter <span class="ctx" id="impulse-ctx">impulse response · how much a return N days old still counts</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-m-impulse"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card third" data-chart="m_carry">
+      <figcaption><h3>Carry through time <span class="ctx">% of price a year · weekly since 2005 · anchor markets</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-m-carry"></div><div class="tablewrap" hidden></div>
+    </figure>
+  </div>
+</section>
+
+<!-- ── Risk ────────────────────────────────────────────────────────────── -->
+<section id="tab-risk" class="panel" role="tabpanel" hidden>
+  <div class="sh">
+    <div class="sh-main"><span class="kicker">Risk</span><h2 class="sh-title">Gearing, leverage and exposure</h2><p class="sh-sub">The portfolio-level books: two gearing layers scale each to its target, a hard leverage cap sits above both, and the budget set in advance is compared with the risk each class actually delivered.</p></div>
+  </div>
+  <div class="filters">
+    <span class="filter-label">Book</span>
+    <div class="seg" role="radiogroup" aria-label="Book" data-filter="risk.book"></div>
+  </div>
+  <div class="tiles" id="risk-tiles"></div>
+  <div class="grid">
+    <figure class="card half" data-chart="r_gearing">
+      <figcaption><h3>Model gearing <span class="ctx">scalar above · the pre-gearing book vol it responds to beneath</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-r-gearing"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="r_leverage">
+      <figcaption><h3>Portfolio scalar and gross leverage <span class="ctx">the vol target's scalar above · gross exposure against the cap beneath</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-r-leverage"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="r_vol">
+      <figcaption><h3>Realised volatility <span class="ctx">63-day · against the target</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-r-vol"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="r_names">
+      <figcaption><h3>Breadth <span class="ctx">markets held, monthly average</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-r-names"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="r_alloc">
+      <figcaption><h3>Budget against realised risk <span class="ctx">share of variance by class · since 2019 and over the whole sample</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-r-alloc"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="r_betas">
+      <figcaption><h3>Market betas <span class="ctx">one-year beta to the S&amp;P 500 and the 10-year note above · correlation beneath</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-r-betas"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="r_activity">
+      <figcaption><h3>Turnover and cost by year</h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-r-activity"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card half" data-chart="r_sleeves">
+      <figcaption><h3>Sleeves <span class="ctx">the models in the book, their risk weights and timing</span></h3></figcaption>
+      <div class="tablewrap" id="r-sleeves"></div>
+      <div class="explain" id="r-note" style="margin-top:12px"></div>
+    </figure>
+    <figure class="card" data-chart="r_positions">
+      <figcaption><h3>The book today <span class="ctx">every position at the last bar</span></h3></figcaption>
+      <div class="tablewrap" id="r-positions" style="max-height:560px"></div>
+    </figure>
+  </div>
+</section>
+
+<!-- ── Methodology ─────────────────────────────────────────────────────── -->
+<section id="tab-methodology" class="panel" role="tabpanel" hidden>
+  <div class="sh">
+    <div class="sh-main"><span class="kicker">Methodology</span><h2 class="sh-title">How the numbers are made</h2><p class="sh-sub">One research platform, one data set, one cost assumption, every strategy run the same way. What was calibrated, when it was frozen, and a glossary for every figure on the site.</p></div>
+  </div>
+  <div class="grid">
+    <figure class="card"><div class="prose" id="method-prose"></div></figure>
+    <figure class="card" data-chart="glossary">
+      <figcaption><h3>Glossary <span class="ctx">every number on the site, defined</span></h3></figcaption>
+      <div class="glossary" id="glossary"></div>
+    </figure>
+    <figure class="card half" data-chart="not_built">
+      <figcaption><h3>Not built, and what each needs <span class="ctx">Carver's remaining strategies</span></h3></figcaption>
+      <div class="tablewrap" id="not-built"></div>
+    </figure>
+    <figure class="card half" data-chart="universe_fig">
+      <figcaption><h3>The universe <span class="ctx">markets by class · held by the flagship today</span></h3>
+        <div class="card-tools"><button class="btn-icon table-toggle" aria-pressed="false" title="Table view" aria-label="Show as table">⊞</button></div></figcaption>
+      <div class="plot" id="chart-universe"></div><div class="tablewrap" hidden></div>
+    </figure>
+    <figure class="card" data-chart="universe_table">
+      <figcaption><h3>Every market <span class="ctx" id="universe-ctx"></span></h3></figcaption>
+      <div class="tablewrap" id="universe-table" style="max-height:560px"></div>
+    </figure>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="page">
+    <p><b>The Quant Desk.</b> Every figure is the output of a simulated, hypothetical backtest of a systematic model on end-of-day data; there is no live track record. Built by Prem Chattani in a personal capacity. For information only; not investment advice.</p>
+    <p class="disclaimer"><b>Disclaimer.</b> The information, analysis and views on this website are solely those of the author in a personal capacity and do not represent the views, opinions or positions of any current or former employer or affiliated institution. Nothing here constitutes investment, financial or trading advice, or a solicitation, recommendation or inducement to buy, sell or hold any financial instrument or to engage in any investment strategy. All figures are simulated results from systematic models run on historical end-of-day data with the configurations shown; no capital has been traded on them. Simulated results have inherent limitations, do not reflect the impact of actual trading and may differ materially from any real outcome; all errors are the author's own. DBMF is referenced only as a public proxy for the SG CTA Index and the author has no affiliation with either. Users accept full responsibility for any decision made on the basis of this website and use it entirely at their own risk. Past performance, simulated or real, is not indicative of future results. This website is not registered with, nor supervised by, any financial regulatory authority.</p>
+  </div>
+</footer>
+
+<script type="module" src="assets/app.js"></script>
+<script src="assets/qm-family.js" data-site="desk"></script>
+</body>
+</html>
